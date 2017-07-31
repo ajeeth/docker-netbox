@@ -8,7 +8,7 @@ services:
             - POSTGRES_PASSWORD=netbox
 
     netbox:
-        image: pitkley/netbox
+        image: ajeeth/netbox
         depends_on:
             - db
         ports:

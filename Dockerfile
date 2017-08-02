@@ -5,6 +5,7 @@ MAINTAINER Ajeeth Samuel <ajeeth.samuel@gmail.com>
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         sudo graphviz postgresql-client \
+	python-dev libldap2-dev libsasl2-dev libssl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -13,7 +14,8 @@ ENV NETBOX_COMMIT 1bda56ea235601d03c9b1190e0a6494de8a343a2
 RUN mkdir -p /usr/src/netbox \
     && git clone https://github.com/digitalocean/netbox.git /usr/src/netbox \
     && (cd /usr/src/netbox && git checkout -q "$NETBOX_COMMIT") \
-    && (cd /usr/src/netbox && pip install --no-cache-dir -r requirements.txt)
+    && (cd /usr/src/netbox && pip install --no-cache-dir -r requirements.txt) \
+    && (pip install django-auth-ldap)
 
 # Change workdir
 WORKDIR /usr/src/netbox/netbox

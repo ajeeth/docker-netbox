@@ -14,10 +14,10 @@ services:
         ports:
             - "8000:8000"
         environment:
-            - "ALLOWED_HOSTS=netbox.dev localhost"
+            - "ALLOWED_HOSTS=netbox.dev localhost *"
             - "DB_HOST=db"
             - "DB_NAME=netbox"
             - "DB_USER=netbox"
             - "DB_PASS=netbox"
-            - "SECRET_KEY=U3HABs3rLvw1fl#uw2hbTC_KlFV9yIeWS7NGtxJOKP8p5cXQdq"
+            - "SECRET_KEY=" # change me
 

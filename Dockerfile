@@ -1,19 +1,22 @@
-FROM python:2.7
-MAINTAINER Ajeeth Samuel <ajeeth.samuel@gmail.com>
+FROM python:3                                                                                                                                                                                        
+MAINTAINER Ajeeth Samuel <ajeeth.samuel@gmail.com>                                                                                                                                                   
+                                                                                                                                                                                                     
+# Install dependencies                                                                                                                                                                               
+RUN apt-get update \                                                                                                                                                                                 
+    && apt-get install -y --no-install-recommends \                                                                                                                                                  
+        sudo graphviz postgresql-client libldap2-dev libsasl2-dev \                                                                                                                                  
+    && apt-get clean \                                                                                                                                                                               
+    && rm -rf /var/lib/apt/lists/*                                                                                                                                                                   
+                                                                                                                                                                                                     
+# Clone and install netbox                                                                                                                                                                           
+ENV NETBOX_COMMIT ec4d28ac6c6bcd37d16d7aeef98581f7ab988195                                                                                                                                           
+RUN mkdir -p /usr/src/netbox \                                                                                                                                                                       
+    && git clone https://github.com/digitalocean/netbox.git /usr/src/netbox \                                                                                                                        
+    && (cd /usr/src/netbox && git checkout -q "$NETBOX_COMMIT") \                                                                                                                                    
+    && (cd /usr/src/netbox && pip3 install --no-cache-dir -r requirements.txt)
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        sudo graphviz postgresql-client \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Clone and install netbox
-ENV NETBOX_COMMIT ec4d28ac6c6bcd37d16d7aeef98581f7ab988195
-RUN mkdir -p /usr/src/netbox \
-    && git clone https://github.com/digitalocean/netbox.git /usr/src/netbox \
-    && (cd /usr/src/netbox && git checkout -q "$NETBOX_COMMIT") \
-    && (cd /usr/src/netbox && pip install --no-cache-dir -r requirements.txt)
+RUN pip3 install gunicorn \
+    && pip3 install django-auth-ldap
 
 # Change workdir
 WORKDIR /usr/src/netbox/netbox
